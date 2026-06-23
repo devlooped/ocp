@@ -1,6 +1,6 @@
-using GitHub.Copilot;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using GitHub.Copilot;
 
 namespace ocp;
 
@@ -31,7 +31,7 @@ public static class OpenAIMapper
             "chat.completion",
             created,
             model,
-            [ new Choice(0, new ResponseMessage("assistant", content, toolCalls), finishReason) ],
+            [new Choice(0, new ResponseMessage("assistant", content, toolCalls), finishReason)],
             new Usage(0, 0, 0)
         );
     }
