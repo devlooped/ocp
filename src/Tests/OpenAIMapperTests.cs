@@ -1,6 +1,7 @@
 using ocp;
 using GitHub.Copilot;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class OpenAIMapperTests
 {
@@ -9,10 +10,10 @@ public class OpenAIMapperTests
     {
         var req = new ChatRequest("gpt-5", new List<ChatMessage>
         {
-            new("system", "sys"),
-            new("user", "hello there"),
-            new("assistant", "hi"),
-            new("user", "how are you?")
+            new("system", JsonDocument.Parse("\"sys\"").RootElement),
+            new("user", JsonDocument.Parse("\"hello there\"").RootElement),
+            new("assistant", JsonDocument.Parse("\"hi\"").RootElement),
+            new("user", JsonDocument.Parse("\"how are you?\"").RootElement)
         });
 
         var prompt = OpenAIMapper.ExtractPrompt(req);
@@ -22,7 +23,7 @@ public class OpenAIMapperTests
     [Fact]
     public void ExtractPrompt_FallsBackToLastWhenNoUser()
     {
-        var req = new ChatRequest("gpt-5", new List<ChatMessage> { new("assistant", "prev") });
+        var req = new ChatRequest("gpt-5", new List<ChatMessage> { new("assistant", JsonDocument.Parse("\"prev\"").RootElement) });
         var prompt = OpenAIMapper.ExtractPrompt(req);
         Assert.Equal("prev", prompt);
     }
@@ -58,7 +59,7 @@ public class OpenAIMapperTests
     [Fact]
     public void Roundtrip_ChatRequest_SerializesAsExpected()
     {
-        var req = new ChatRequest("gpt-5", [new("user", "test prompt")]);
+        var req = new ChatRequest("gpt-5", [new("user", JsonDocument.Parse("\"test prompt\"").RootElement)]);
         var json = JsonSerializer.Serialize(req, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         Assert.Contains("\"model\":\"gpt-5\"", json);
         Assert.Contains("\"role\":\"user\"", json);

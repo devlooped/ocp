@@ -174,8 +174,23 @@ app.MapPost("/v1/chat/completions", async (HttpContext ctx) =>
 
         var assistantEvent = await session.SendAndWaitAsync(new MessageOptions { Prompt = prompt });
 
-        var completion = OpenAIMapper.ToChatCompletionResponse(req.Model, assistantEvent);
+        if (req.Stream == true)
+        {
+            ctx.Response.ContentType = "text/event-stream";
+            ctx.Response.Headers.CacheControl = "no-cache";
 
+            foreach (var chunk in OpenAIMapper.ToStreamChunks(req.Model, assistantEvent))
+            {
+                var chunkJson = JsonSerializer.Serialize(chunk, jsonOptions);
+                await ctx.Response.WriteAsync($"data: {chunkJson}\n\n");
+                await ctx.Response.Body.FlushAsync();
+            }
+
+            await ctx.Response.WriteAsync("data: [DONE]\n\n");
+            return;
+        }
+
+        var completion = OpenAIMapper.ToChatCompletionResponse(req.Model, assistantEvent);
         ctx.Response.ContentType = "application/json";
         await ctx.Response.WriteAsync(JsonSerializer.Serialize(completion, jsonOptions));
     }
