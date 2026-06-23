@@ -64,4 +64,24 @@ public class OpenAIMapperTests
         Assert.Contains("\"role\":\"user\"", json);
         Assert.Contains("test prompt", json);
     }
+
+    [Fact]
+    public void ToStartupModelsLine_ProducesOcpPrefixedIdsLine_UsingMapperShape()
+    {
+        // ModelInfo has public ctor (verified via reflection); properties are writable
+        var models = new List<ModelInfo>
+        {
+            new ModelInfo { Id = "gpt-5" },
+            new ModelInfo { Id = "claude-sonnet-4.5" }
+        };
+        var line = OpenAIMapper.ToStartupModelsLine(models);
+        Assert.Equal("ocp: models: gpt-5, claude-sonnet-4.5", line);
+    }
+
+    [Fact]
+    public void ToStartupModelsLine_HandlesEmptyList()
+    {
+        var line = OpenAIMapper.ToStartupModelsLine(new List<ModelInfo>());
+        Assert.Equal("ocp: models: ", line);
+    }
 }

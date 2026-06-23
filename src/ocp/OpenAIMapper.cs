@@ -31,6 +31,17 @@ public static class OpenAIMapper
         var data = models.Select(m => new ModelObject(m.Id, "model", now, "copilot")).ToList();
         return new ModelsListResponse("list", data);
     }
+
+    /// <summary>
+    /// Pure formatter for startup console output. Returns a single "ocp: models: ..." line.
+    /// Reuses ToModelsListResponse shape internally for consistency.
+    /// </summary>
+    public static string ToStartupModelsLine(IList<ModelInfo> models)
+    {
+        var resp = ToModelsListResponse(models);
+        var ids = resp.Data.Select(d => d.Id);
+        return "ocp: models: " + string.Join(", ", ids);
+    }
 }
 
 // OpenAI compatible request/response shapes (minimal, for /v1 compat)

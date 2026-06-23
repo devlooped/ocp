@@ -83,6 +83,8 @@ try
 {
     await client.StartAsync();
     Console.WriteLine("ocp: Copilot client started.");
+    var models = await client.ListModelsAsync();
+    Console.WriteLine(OpenAIMapper.ToStartupModelsLine(models));
 }
 catch (Exception ex)
 {
