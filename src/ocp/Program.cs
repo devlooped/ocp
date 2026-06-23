@@ -1,10 +1,10 @@
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using GitHub.Copilot;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using ocp; // for OpenAIMapper + DTOs (pure testable)
 
 var jsonOptions = new JsonSerializerOptions

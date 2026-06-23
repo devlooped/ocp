@@ -1,7 +1,7 @@
-using ocp;
-using GitHub.Copilot;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using GitHub.Copilot;
+using ocp;
 
 public class OpenAIMapperTests
 {
