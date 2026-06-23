@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <Product>ocp</Product>
+    <Description>OpenAI API hosting for Copilot SDK</Description>
+    <ImplicitUsings>true</ImplicitUsings>
+  </PropertyGroup>
+</Project>
